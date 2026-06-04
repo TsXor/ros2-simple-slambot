@@ -1,0 +1,17 @@
+{
+    "terminal.integrated.defaultProfile.linux": "ros2",
+    "terminal.integrated.profiles.linux": {
+        "ros2": {
+            "path": "/bin/bash",
+            "args": ["-c", "source /opt/ros/jazzy/setup.bash && exec bash"]
+        }
+    },
+    "python.analysis.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages",
+        "${workspaceFolder}/install/lib/python3.12/site-packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages",
+        "${workspaceFolder}/install/lib/python3.12/site-packages"
+    ],
+}

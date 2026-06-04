@@ -4,3 +4,7 @@
 [submodule "src/cartographer_ros"]
 	path = src/cartographer_ros
 	url = https://github.com/ros2/cartographer_ros.git
+[submodule "src/navigation2"]
+	path = src/navigation2
+	url = https://github.com/ros-planning/navigation2.git
+	branch = jazzy

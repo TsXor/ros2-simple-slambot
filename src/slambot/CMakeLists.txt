@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(src/slambot)
+project(slambot)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(cartographer_ros REQUIRED)
+find_package(rclcpp REQUIRED)
 
 add_executable(slam src/slam.cpp)
 target_include_directories(slam PUBLIC
@@ -34,4 +35,19 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+install(DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY model
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY rviz
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY world
+  DESTINATION share/${PROJECT_NAME}
+)
 ament_package()

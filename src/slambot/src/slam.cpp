@@ -5,6 +5,6 @@ int main(int argc, char ** argv)
   (void) argc;
   (void) argv;
 
-  printf("hello world src/slambot package\n");
+  printf("hello world slambot package\n");
   return 0;
 }
