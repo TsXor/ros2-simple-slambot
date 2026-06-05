@@ -10,6 +10,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>topic_tools</depend>
   <depend>teleop_twist_tkinter</depend>
   <depend>cartographer_ros</depend>
   <depend>ros_gz_sim</depend>

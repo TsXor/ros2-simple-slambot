@@ -48,6 +48,7 @@ def generate_launch_description():
             executable='robot_state_publisher',
             output='screen',
             parameters=[{
+                'use_sim_time': True,
                 'robot_description': Command(['xacro ', xacro_file]),
             }]
         ),
@@ -81,11 +82,22 @@ def generate_launch_description():
             ],
         ),
         Node(
+            package='topic_tools',
+            executable='relay',
+            arguments=['/cmd_vel', '/diff_drive_base_controller/cmd_vel'],
+            output='screen'
+        ),
+        Node(
+            package='topic_tools',
+            executable='relay',
+            arguments=['/diff_drive_base_controller/odom', '/odom'],
+            output='screen'
+        ),
+        Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             arguments=[
                 '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-                '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
                 '/camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
                 '/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                 '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
