@@ -8,3 +8,6 @@
 	path = src/navigation2
 	url = https://github.com/ros-planning/navigation2.git
 	branch = jazzy
+[submodule "src/frontier_exploration_ros2"]
+	path = src/frontier_exploration_ros2
+	url = https://github.com/mertgulerx/frontier_exploration_ros2.git
