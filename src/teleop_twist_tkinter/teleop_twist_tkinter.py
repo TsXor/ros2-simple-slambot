@@ -46,7 +46,7 @@ class TeleopTwistKeyboardGUI:
 
         # 状态变量
         self.lock = threading.Lock()
-        self.active_keys = set()
+        self.active_keys = set[str]()
         self.x = 0.0
         self.y = 0.0
         self.z = 0.0
@@ -75,6 +75,12 @@ class TeleopTwistKeyboardGUI:
             't': (0, 0, 1, 0),
             'b': (0, 0, -1, 0),
         }
+        self.special_keysym_map = {
+            'comma': ',',
+            'period': '.',
+            'less': '<',
+            'greater': '>',
+        }
 
         self.speed_bindings = {
             'q': (1.1, 1.1),
@@ -91,6 +97,9 @@ class TeleopTwistKeyboardGUI:
             'j': 'J', 'l': 'L',
             'm': 'M', ',': '<', '.': '>',
         }
+
+        self.debounce_timeout = 40
+        self.debounce_id = dict[str, str]()
 
         self.setup_ui()
         self.setup_keyboard()
@@ -149,10 +158,9 @@ class TeleopTwistKeyboardGUI:
                 font=('Arial', 10)
             )
             btn.grid(row=r, column=c, padx=3, pady=3, sticky='we')
-            btn.bind('<ButtonPress-1>',
-                     lambda e, k=key: self.on_button_press(k))
-            btn.bind('<ButtonRelease-1>',
-                     lambda e, k=key: self.on_button_release(k))
+            on_press, on_release = self.make_button_cb(key)
+            btn.bind('<ButtonPress-1>', on_press)
+            btn.bind('<ButtonRelease-1>', on_release)
             self.dir_buttons[key] = btn
 
         # ========== 垂直控制按钮 ==========
@@ -175,10 +183,9 @@ class TeleopTwistKeyboardGUI:
                 font=('Arial', 10)
             )
             btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
-            btn.bind('<ButtonPress-1>',
-                     lambda e, k=key: self.on_button_press(k))
-            btn.bind('<ButtonRelease-1>',
-                     lambda e, k=key: self.on_button_release(k))
+            on_press, on_release = self.make_button_cb(key)
+            btn.bind('<ButtonPress-1>', on_press)
+            btn.bind('<ButtonRelease-1>', on_release)
 
         # ========== 速度控制按钮 ==========
         speed_frame = ttk.LabelFrame(
@@ -263,23 +270,23 @@ class TeleopTwistKeyboardGUI:
         with self.lock:
             self.update_twist()
 
-    def on_button_press(self, key):
-        """按钮按下：添加对应键到激活集合"""
-        with self.lock:
-            if key == 'k':
+    def make_button_cb(self, key: str):
+        if key == 'k':
+            def on_press(e):
                 self.active_keys.clear()
-            else:
+                self.update_twist()
+            def on_release(e):
+                pass
+        else:
+            def on_press(e):
                 self.active_keys.add(key)
-            self.update_twist()
-
-    def on_button_release(self, key):
-        """按钮释放：从激活集合移除"""
-        with self.lock:
-            if key != 'k':
+                self.update_twist()
+            def on_release(e):
                 self.active_keys.discard(key)
-            self.update_twist()
+                self.update_twist()
+        return on_press, on_release
 
-    def on_speed_button(self, key):
+    def on_speed_button(self, key: str):
         """速度按钮点击：调整速度参数"""
         with self.lock:
             if key in self.speed_bindings:
@@ -288,7 +295,7 @@ class TeleopTwistKeyboardGUI:
                 self.turn *= t_mult
                 self.speed_label.config(text=self.get_speed_text())
 
-    def on_key_press(self, event):
+    def on_key_press(self, event: tk.Event):
         """键盘按下事件"""
         key = event.char
 
@@ -298,36 +305,38 @@ class TeleopTwistKeyboardGUI:
             self.holonomic = True
             return
 
-        if not key:
-            return
+        if not key: return
 
         with self.lock:
-            if key in self.speed_bindings:
-                # 速度调整键
+            if key in self.speed_bindings: # 速度调整键
                 s_mult, t_mult = self.speed_bindings[key]
                 self.speed *= s_mult
                 self.turn *= t_mult
                 self.speed_label.config(text=self.get_speed_text())
-            elif key == '\x03':
-                # Ctrl-C
+            elif key == '\x03': # Ctrl-C
                 self.on_close()
                 return
-            elif key == 'k':
-                # 停止键
+            elif key == 'k': # 停止键
                 self.active_keys.clear()
                 self.update_twist()
-            elif key.lower() in 'uijol,m.t' or key in '<>':
-                # 方向键（包含大小写及特殊符号）
-                self.active_keys.add(key)
-                self.update_twist()
-            else:
-                # 其他任意键：停止（与原程序一致）
+            elif key in self.move_bindings: # 方向键
+                debounce_id = self.debounce_id.pop(key, None)
+                if debounce_id is None:
+                    self.active_keys.add(key)
+                    self.update_twist()
+                else:
+                    self.root.after_cancel(debounce_id)
+            else: # 其他任意键
+                # 停止（与原程序一致）
                 self.active_keys.clear()
                 self.update_twist()
 
-    def on_key_release(self, event):
+    def on_key_release(self, event: tk.Event):
         """键盘释放事件"""
-        key = event.char
+        if event.keysym in self.special_keysym_map:
+            key = self.special_keysym_map[event.keysym]
+        else:
+            key = event.keysym
 
         # 检测 Shift 键退出 Holonomic 模式
         if event.keysym in ('Shift_L', 'Shift_R'):
@@ -335,13 +344,17 @@ class TeleopTwistKeyboardGUI:
             self.holonomic = False
             return
 
-        if not key:
-            return
+        if not key: return
 
         with self.lock:
-            if key.lower() in 'uijol,m.t' or key in '<>':
-                self.active_keys.discard(key)
-                self.update_twist()
+            if key in self.move_bindings:
+                def actually_discard():
+                    with self.lock:
+                        del self.debounce_id[key]
+                        self.active_keys.discard(key)
+                        self.update_twist()
+                debounce_id = self.root.after(self.debounce_timeout, actually_discard)
+                self.debounce_id[key] = debounce_id
 
     def update_twist(self):
         """根据当前激活的键和 Holonomic 状态计算 Twist 分量"""
