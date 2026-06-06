@@ -8,10 +8,13 @@
     },
     "python.analysis.extraPaths": [
         "/opt/ros/jazzy/lib/python3.12/site-packages",
-        "${workspaceFolder}/install/lib/python3.12/site-packages"
+        "${workspaceFolder}/install/lib/python3.12/site-packages",
+        "${workspaceFolder}/src/navigation2/nav2_common"
     ],
     "python.autoComplete.extraPaths": [
         "/opt/ros/jazzy/lib/python3.12/site-packages",
-        "${workspaceFolder}/install/lib/python3.12/site-packages"
+        "${workspaceFolder}/install/lib/python3.12/site-packages",
     ],
+    "cmake.sourceDirectory": "${workspaceFolder}/src/slambot",
+    "ROS2.distro": "jazzy",
 }
