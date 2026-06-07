@@ -17,6 +17,12 @@ def generate_launch_description():
 
     world_file = LaunchConfiguration('world_file')
     carto_config = LaunchConfiguration('carto_config')
+    x = LaunchConfiguration('x')
+    y = LaunchConfiguration('y')
+    z = LaunchConfiguration('z')
+    roll = LaunchConfiguration('roll')
+    pitch = LaunchConfiguration('pitch')
+    yaw = LaunchConfiguration('yaw')
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -29,6 +35,12 @@ def generate_launch_description():
             default_value=str(pkgdir / 'config' / 'cartographer.lua'),
             description='Path to Cartographer configuration file'
         ),
+        DeclareLaunchArgument('x', default_value='0.55'),
+        DeclareLaunchArgument('y', default_value='0.0'),
+        DeclareLaunchArgument('z', default_value='0.1'),
+        DeclareLaunchArgument('roll', default_value='0.0'),
+        DeclareLaunchArgument('pitch', default_value='0.0'),
+        DeclareLaunchArgument('yaw', default_value='0.0'),
 
         AppendEnvironmentVariable('GZ_SIM_RESOURCE_PATH', str(pkgdir / 'model')),
 
@@ -37,12 +49,12 @@ def generate_launch_description():
             launch_arguments={
                 'world_file': world_file,
                 'xacro_file': xacro_file,
-                'x': '0.55',
-                'y': '0',
-                'z': '0.1',
-                'roll': '0',
-                'pitch': '0',
-                'yaw': '0',
+                'x': x,
+                'y': y,
+                'z': z,
+                'roll': roll,
+                'pitch': pitch,
+                'yaw': yaw,
             }.items()
         ),
         Include(
