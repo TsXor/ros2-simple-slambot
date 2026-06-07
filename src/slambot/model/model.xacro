@@ -34,10 +34,10 @@
 
   <!-- 机器人本体结构 -->
 
-  <link name="robot_footprint"></link>
-  <joint name="robot_footprint_joint" type="fixed">
+  <link name="base_link"></link>
+  <joint name="base_link_joint" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="robot_footprint"/>
+    <parent link="base_link"/>
     <child link="chassis" />
   </joint>
 
@@ -162,7 +162,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <gazebo reference="left_wheel">
     <material>Gazebo/Black</material>
@@ -193,7 +193,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <gazebo reference="right_wheel">
     <material>Gazebo/Black</material>
@@ -281,8 +281,8 @@
           <horizontal>
             <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
+            <min_angle>-2.356194</min_angle> <!-- -135° -->
+            <max_angle>2.356194</max_angle>  <!-- +135° -->
           </horizontal>
         </scan>
         <range>

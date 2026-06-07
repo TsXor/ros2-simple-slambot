@@ -19,7 +19,7 @@ frontier_explorer:
     global_frame: map
  
     # Robot base frame used for TF lookups.
-    robot_base_frame: robot_footprint
+    robot_base_frame: base_link
 
     # MarkerArray topic used for frontier visualization in RViz.
     frontier_marker_topic: /explore/frontiers
