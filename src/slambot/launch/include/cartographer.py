@@ -24,6 +24,7 @@ def generate_launch_description():
         DeclareLaunchArgument('resolution', default_value='0.05'),
         DeclareLaunchArgument('publish_period_sec', default_value='1.0'),
         DeclareLaunchArgument('config'),
+
         OpaqueFunction(function=split_config_path),
 
         Node(

@@ -16,8 +16,8 @@ def generate_launch_description():
     pkgdir = Path(get_package_share_directory('slambot'))
     frontier_exploration_dir = Path(get_package_share_directory('frontier_exploration_ros2'))
     launch_include_dir = pkgdir / 'launch' / 'include'
-    xacro_file = pkgdir / 'model' / 'model.xacro'
 
+    world = LaunchConfiguration('world')
     world_file = LaunchConfiguration('world_file')
     carto_config = LaunchConfiguration('carto_config')
     nav2_config = LaunchConfiguration('nav2_config')
@@ -51,8 +51,13 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument(
+            'world',
+            default_value='',
+            description='Name of a packaged world'
+        ),
+        DeclareLaunchArgument(
             'world_file',
-            default_value=str(pkgdir / 'world' / 'turtlebot3_world.world'),
+            default_value='',
             description='Path to Gazebo world file'
         ),
         DeclareLaunchArgument(
@@ -70,20 +75,18 @@ def generate_launch_description():
             default_value=str(pkgdir / 'config' / 'explorer_params.yaml'),
             description='Path to Frontier Exploration configuration file'
         ),
-        DeclareLaunchArgument('x', default_value='0.55'),
-        DeclareLaunchArgument('y', default_value='0.0'),
-        DeclareLaunchArgument('z', default_value='0.1'),
-        DeclareLaunchArgument('roll', default_value='0.0'),
-        DeclareLaunchArgument('pitch', default_value='0.0'),
-        DeclareLaunchArgument('yaw', default_value='0.0'),
-
-        AppendEnvironmentVariable('GZ_SIM_RESOURCE_PATH', str(pkgdir / 'model')),
+        DeclareLaunchArgument('x'),
+        DeclareLaunchArgument('y'),
+        DeclareLaunchArgument('z'),
+        DeclareLaunchArgument('roll'),
+        DeclareLaunchArgument('pitch'),
+        DeclareLaunchArgument('yaw'),
 
         Include(
-            LaunchFile(str(launch_include_dir / 'simulation.py')),
+            LaunchFile(str(launch_include_dir / 'sim_packaged.py')),
             launch_arguments={
+                'world': world,
                 'world_file': world_file,
-                'xacro_file': xacro_file,
                 'x': x,
                 'y': y,
                 'z': z,
