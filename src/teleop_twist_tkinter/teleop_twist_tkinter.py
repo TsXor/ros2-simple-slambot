@@ -438,7 +438,10 @@ class TeleopTwistKeyboardGUI:
 
 def main():
     gui = TeleopTwistKeyboardGUI()
-    gui.run()
+    try: gui.run()
+    except KeyboardInterrupt:
+        logger = gui.node.get_logger()
+        logger.info('Interrupted, quitting.')
 
 if __name__ == '__main__':
     main()
