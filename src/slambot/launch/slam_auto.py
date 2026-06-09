@@ -75,12 +75,12 @@ def generate_launch_description():
             default_value=str(pkgdir / 'config' / 'explorer_params.yaml'),
             description='Path to Frontier Exploration configuration file'
         ),
-        DeclareLaunchArgument('x'),
-        DeclareLaunchArgument('y'),
-        DeclareLaunchArgument('z'),
-        DeclareLaunchArgument('roll'),
-        DeclareLaunchArgument('pitch'),
-        DeclareLaunchArgument('yaw'),
+        DeclareLaunchArgument('x', default_value=''),
+        DeclareLaunchArgument('y', default_value=''),
+        DeclareLaunchArgument('z', default_value=''),
+        DeclareLaunchArgument('roll', default_value=''),
+        DeclareLaunchArgument('pitch', default_value=''),
+        DeclareLaunchArgument('yaw', default_value=''),
 
         Include(
             LaunchFile(str(launch_include_dir / 'sim_packaged.py')),

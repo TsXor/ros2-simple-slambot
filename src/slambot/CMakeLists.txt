@@ -58,4 +58,7 @@ install(DIRECTORY rviz
 install(DIRECTORY world
   DESTINATION share/${PROJECT_NAME}
 )
+install(DIRECTORY map
+  DESTINATION share/${PROJECT_NAME}
+)
 ament_package()
