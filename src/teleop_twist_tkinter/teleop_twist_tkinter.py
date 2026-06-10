@@ -7,6 +7,7 @@ from typing import cast
 import rcl_interfaces.msg
 import rclpy
 from geometry_msgs.msg import Twist, TwistStamped
+from rclpy.executors import ExternalShutdownException
 
 
 class TeleopTwistKeyboardGUI:
@@ -439,7 +440,7 @@ class TeleopTwistKeyboardGUI:
 def main():
     gui = TeleopTwistKeyboardGUI()
     try: gui.run()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         logger = gui.node.get_logger()
         logger.info('Interrupted, quitting.')
 
