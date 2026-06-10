@@ -5,11 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
-        - /RobotModel1
-        - /Plan1
       Splitter Ratio: 0.5
-    Tree Height: 542
+    Tree Height: 694
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -55,7 +52,7 @@ Visualization Manager:
       Class: rviz_default_plugins/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: Costmap
       Topic:
         Depth: 5
@@ -71,7 +68,7 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /global_costmap/costmap_updates
       Use Timestamp: false
-      Value: false
+      Value: true
     - Alpha: 0.699999988079071
       Binary representation: false
       Binary threshold: 100
@@ -118,6 +115,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         camera:
           Alpha: 1
           Show Axes: false
@@ -152,10 +153,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -291,6 +288,7 @@ Window Geometry:
     collapsed: false
   Hide Left Dock: false
   Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000002000000000000017600000344fc0200000004fb000000100044006900730070006c006100790073010000003f00000344000000cc00fffffffb0000001200530065006c0065006300740069006f006e0000000280000001030000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000002be000000c50000005d00fffffffb0000000a00560069006500770073000000028b000000f8000000a900ffffff00000003000006660000003cfc0100000001fb0000000800540069006d00650100000000000006660000026f00ffffff000004ea0000034400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:

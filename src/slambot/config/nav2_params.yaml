@@ -238,6 +238,9 @@ global_costmap:
       robot_radius: 0.22
       resolution: 0.05
       track_unknown_space: true
+      # nav2的默认阈值为100，在自动探索场景下，这会导致已知的障碍物都不被考虑。
+      # map_saver_cli默认以三值方式保存地图，所以在纯导航场景下该参数不影响实际效果。
+      lethal_cost_threshold: 85
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
