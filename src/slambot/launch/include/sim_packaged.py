@@ -25,16 +25,22 @@ def generate_launch_description():
     yaw = LaunchConfiguration('yaw')
 
     def find_packaged_world(context: LaunchContext, *args, **kwargs):
-        packaged_worlds = json.loads((pkgdir / 'world' / 'packaged.json').read_text())
         world = str(context.launch_configurations['world'])
-        if world not in packaged_worlds:
+        if not world:
             world_params = ['world_file', 'x', 'y', 'z', 'roll', 'pitch', 'yaw']
             world_specified = all(context.launch_configurations[p] for p in world_params)
             if not world_specified: raise ValueError('world parameters not specified')
             return []
-        [x, y, z], [roll, pitch, yaw] = packaged_worlds[world]
+        world_path = pkgdir / 'world' / f'{world}.world'
+        config_path = pkgdir / 'world' / f'{world}.json'
+        if not world_path.exists():
+            raise ValueError(f'specified packaged world {world} does not exist')
+        if not config_path.exists():
+            raise ValueError(f'world {world} is packaged, but corresponding config file not found')
+        world_info = json.loads(config_path.read_text())
+        [x, y, z], [roll, pitch, yaw] = world_info['initial_pose']
         return [
-            SetLaunchConfiguration('world_file', str(pkgdir / 'world' / f'{world}.world')),
+            SetLaunchConfiguration('world_file', str(world_path)),
             SetLaunchConfiguration('x', str(x)),
             SetLaunchConfiguration('y', str(y)),
             SetLaunchConfiguration('z', str(z)),

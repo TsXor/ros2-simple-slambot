@@ -29,15 +29,17 @@ def generate_launch_description():
     yaw = LaunchConfiguration('yaw')
 
     def find_packaged_map(context: LaunchContext, *args, **kwargs):
-        packaged_worlds = json.loads((pkgdir / 'world' / 'packaged.json').read_text())
         world = str(context.launch_configurations['world'])
-        if world not in packaged_worlds:
+        if not world:
             if not context.launch_configurations['map_file']:
                 raise ValueError('map file not specified')
             return []
+        world_path = pkgdir / 'world' / f'{world}.world'
         map_path = pkgdir / 'map' / f'{world}.yaml'
+        if not world_path.exists():
+            raise ValueError(f'specified packaged world {world} does not exist')
         if not map_path.exists():
-            raise ValueError('world is packaged, but corresponding map file not found')
+            raise ValueError(f'world {world} is packaged, but corresponding map file not found')
         return [
             SetLaunchConfiguration('map_file', str(map_path)),
         ]
